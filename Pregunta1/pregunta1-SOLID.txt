@@ -1,0 +1,18 @@
+# Principios SOLID
+S: Single Responsability
+O: Open/Clouse
+L: Liskov Substitution
+I: Interface Segregation
+D: Dependency Inversion
+
+## Principio S
+El principio de **responsabilidad única** nos dice que un onjeto debe realizar una única cosa. En este caso, ambas clases que representan a los cines, tanto CinePlaneta como CineStark tienen escrito las funcionalidades de listar las peliculas, listar las funciones y guardar las entradas, lo cual incumple con realizar una única cosa
+
+## Principio O
+El principio **Open-Close** nos dice que una entidad deberia estar abierta a extensión pero cerrada a modificación, es decir que tenemos que ser capaces de extender el comportamiento de nuestras clases sin necesidad de modificar su código. Para este caso, si uno quisiera incluir una nueva pelicula tendria que modificar el codigo ya sea de la clase CinePlaneta o CineStark, para poder introucir una nueva pelicula y su horario, con lo cual no se estaria cumpliendo el hecho de que el codigo deberia estar cerrado para su modificación.
+
+## Principio L
+En este caso el principo de **Liskov Substitution** no se cumple, debido a que las clases CinePlanet y CineStark deberian heredar de una clase padre, ya que estas tienen los mismos metodos, por lo cual, estos deberian estar sustituidos en una clase superior. Además, si en caso no se quisiera usar herencia, se podria utilizar el denominado duck-typing, que tampoco es usado dentro de este codigo
+
+
+

@@ -1,5 +1,17 @@
 import sys
 
+########################################
+#Patron decorator
+def mostrar_pelicula(peliculas):
+    for pelicula in peliculas:
+                print("{}. {}".format(pelicula.id, pelicula.nombre))
+
+def p_decorator(func):
+    def func_wrapper(param):
+        return func(param)
+    return func_wrapper
+########################################
+
 class Entrada:
     def __init__(self, pelicula_id, funcion, cantidad):
         self.pelicula_id = pelicula_id
@@ -10,9 +22,39 @@ class Pelicula:
     def __init__(self, id, nombre):
         self.id = id
         self.nombre = nombre
+        
+########################################
+class Cine:
+    def __init__(self):
+        #Patron Comporsite
+        self.hijos =[]
+    def listar_peliculas(self):
+        pass
+    def listar_funciones(self, pelicula_id):
+        pass
+    def guardar_entrada(self, id_pelicula_elegida, funcion_elegida, cantidad):
+        pass
+    def add_hijos(self, hijo):
+        #Patron Comporsite
+        self.hijos.append(hijo)
+    def imprimir_cine(self):
+        #Patron Comporsite
+        for hijo in self.hijos:
+            id, nombre = hijo.imprimir_cine()
+            print(str(id) + ": " + nombre)
+########################################
+        
+class CinePlaneta(Cine):
+    ########################################
+    #Patron Singleton
+    instancia = None
 
-
-class CinePlaneta:
+    @classmethod
+    def get_instance(cls):
+        if cls.instancia == None:
+            cls.instancia = CinePlaneta()
+        return cls.instancia
+    #########################################
     def __init__(self):
         peliculaIT = Pelicula(1, 'IT')
         peliculaHF = Pelicula(2, 'La Hora Final')
@@ -37,9 +79,23 @@ class CinePlaneta:
         self.entradas.append(Entrada(id_pelicula_elegida, funcion_elegida, cantidad))
         return len(self.entradas)
 
+    def imprimir_cine(self):
+        #Comporsite
+        return (1, "CinePlaneta")
 
 
-class CineStark:
+
+class CineStark(Cine):
+    ########################################
+    #Patron Singleton
+    instancia = None
+
+    @classmethod
+    def get_instance(cls):
+        if cls.instancia == None:
+            cls.instancia = CineStark()
+        return cls.instancia
+    #########################################
     def __init__(self):
         peliculaD = Pelicula(1, 'Desparecido')
         peliculaDeep = Pelicula(2, 'Deep El Pulpo')
@@ -61,7 +117,35 @@ class CineStark:
         self.entradas.append(Entrada(id_pelicula_elegida, funcion_elegida, cantidad))
         return len(self.entradas)
 
+    def imprimir_cine(self):
+        #Comporsite
+        return (2, "CineStark")
+
+
+
+####################################################
+#PATRON FACTORY METHOD
+class CineFactory:
+    def obtener_cines(self, tipo_cine):
+        if tipo_cine == "1":
+            #################################
+            #Patron Singleton
+            return CinePlaneta.get_instance()
+        elif tipo_cine == "2":
+            #################################
+            #Patron Singleton
+            return CineStark.get_instance()
+        else:
+            return None
+####################################################
+
+
 def main():
+    cines = Cine()
+    cineplaneta = CinePlaneta.get_instance()
+    cinestark = CineStark.get_instance()
+    cines.add_hijos(cineplaneta)
+    cines.add_hijos(cinestark)
     terminado = False;
     while not terminado:
         print('Ingrese la opción que desea realizar')
@@ -74,49 +158,43 @@ def main():
         if opcion == '1':
             print('********************')
             print('Lista de cines')
-            print('1: CinePlaneta')
-            print('2: CineStark')
+            cines.imprimir_cine() #Patron Comporsite
             print('********************')
 
         elif opcion == '2':
             print('********************')
             print('Lista de cines')
-            print('1: CinePlaneta')
-            print('2: CineStark')
+            cines.imprimir_cine() #Patron Comporsite
             print('********************')
 
             cine = input('Primero elija un cine:')
-            if cine == '1':
-                # CinePlaneta
-                cine = CinePlaneta()
-            elif cine == '2':
-                cine = CineStark()
-
+#######################################################
+            #Patron Factory
+            factory = CineFactory()
+            cine = factory.obtener_cines(cine)
             peliculas = cine.listar_peliculas()
+#######################################################
             print('********************')
-            for pelicula in peliculas:
-                print("{}. {}".format(pelicula.id, pelicula.nombre))
+            func_decoradora = p_decorator(mostrar_pelicula)#Patron decorator
+            func_decoradora(peliculas)#Patron decorator
             print('********************')
 
         elif opcion == '3':
             print('********************')
             print('COMPRAR ENTRADA')
             print('Lista de cines')
-            print('1: CinePlaneta')
-            print('2: CineStark')
+            cines.imprimir_cine() #Patron Comporsite
             print('********************')
             cine = input('Primero elija un cine:')
-            if cine == '1':
-                # CinePlaneta
-                cine = CinePlaneta()
-            elif cine == '2':
-                cine = CineStark()
-
+#######################################################
+            #Patron Factory
+            factory = CineFactory()
+            cine = factory.obtener_cines(cine)
             peliculas = cine.listar_peliculas()
-            for pelicula in peliculas:
-                print("{}. {}".format(pelicula.id, pelicula.nombre))
+#######################################################
+            func_decoradora = p_decorator(mostrar_pelicula)#Patron decorator
+            func_decoradora(peliculas)#Patron decorator
             pelicula_elegida = input('Elija pelicula:')
-            #pelicula = obtener_pelicula(id_pelicula)
             print('Ahora elija la función (debe ingresar el formato hh:mm): ')
             for funcion in cine.listar_funciones(pelicula_elegida):
                 print('Función: {}'.format(funcion))
